@@ -62,4 +62,7 @@
 		<cfreturn this.className EQ arguments.className and findNoCase("sqlserver",arguments.dsn)>
 	</cffunction>
 	
+	<cffunction name="alwaysSetTimeout" returntype="boolean" output="false">	
+		<cfreturn true>
+	</cffunction>	
 </cfcomponent>
