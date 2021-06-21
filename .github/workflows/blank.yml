@@ -10,7 +10,7 @@ jobs:
 
     runs-on: ubuntu-latest
     services:
-    sql-server:
+     sql-server:
         # Docker Hub image
         image: mcr.microsoft.com/mssql/server:2019-latest
         env:
