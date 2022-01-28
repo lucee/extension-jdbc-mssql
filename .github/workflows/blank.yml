@@ -46,7 +46,7 @@ jobs:
         key: lucee-downloads-${{ env.luceeVersion }}
         restore-keys: |
           lucee-downloads
-    - name: Build extension-jdbc-oracle with Ant
+    - name: Build extension-jdbc-mssql with Ant
       run: ant -noinput -verbose -buildfile build.xml
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
