@@ -81,17 +81,13 @@ component extends="types.Driver" implements="types.IDatasource" {
 			see https://learn.microsoft.com/en-us/sql/connect/jdbc/using-kerberos-integrated-authentication-to-connect-to-sql-server?view=sql-server-ver16
 			Set to ""true"" (with authenticationscheme=NTLM), to indicate that NTLM credentials are used by SQL Server. If ""false"", the username and password must be supplied.",
 		"radio",2)
-		,field("Encrypt","encrypt","true,false",true,
+		,field("Encrypt","encrypt","true,false",false,
 			"When true, SQL Server uses SSL encryption for all data sent between the client and server if the server has a certificate installed.",
 			"radio",1)
 		,field("TrustServerCertificate","trustServerCertificate","true,false",true,
 			"When set to true, SSL is used to encrypt the channel when bypassing walking the certificate chain to validate trust. 
 			If TrustServerCertificate is set to true and Encrypt is set to false, the channel is not encrypted.",
 			"radio",1)
-		,field("Workstation ID","trustServerCertificate","",true,
-			"The workstation ID. Used to identify the specific workstation in various profiling and logging tools.
-			If none is specified, the <empty string> is used.",
-		"text")
 		,field("Key Store Authentication","keyStoreAuthentication","",false,
 			"(Version 6.0+) This property identifies which key store to use with Always Encrypted and determines an authentication mechanism used to authenticate to the key store.
 			The driver supports setting up of the Java Key Store seamlessly when you set ""keyStoreAuthentication=JavaKeyStorePassword"". 
