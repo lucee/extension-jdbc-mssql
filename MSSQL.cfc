@@ -88,10 +88,6 @@ component extends="types.Driver" implements="types.IDatasource" {
 			"When set to true, SSL is used to encrypt the channel when bypassing walking the certificate chain to validate trust. 
 			If TrustServerCertificate is set to true and Encrypt is set to false, the channel is not encrypted.",
 			"radio",1)
-		,field("Workstation ID","trustServerCertificate","",true,
-			"The workstation ID. Used to identify the specific workstation in various profiling and logging tools.
-			If none is specified, the <empty string> is used.",
-		"text")
 		,field("Key Store Authentication","keyStoreAuthentication","",false,
 			"(Version 6.0+) This property identifies which key store to use with Always Encrypted and determines an authentication mechanism used to authenticate to the key store.
 			The driver supports setting up of the Java Key Store seamlessly when you set ""keyStoreAuthentication=JavaKeyStorePassword"". 
