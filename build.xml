@@ -248,6 +248,13 @@ jdbc: "[{'id':'${jdbcid}','connectionString':'${_connstr}','label':'${label}','c
         <include name="*.jar"/>
       </fileset>
     </copy>
+
+    <!-- copy addional jars 
+    <copy todir="${distl}/jars/">
+      <fileset dir="./addjars">
+        <include name="*.jar"/>
+      </fileset>
+    </copy>-->
     <!-- <copy file="${jar}" tofile="${distl}/jars/${jarName}"/> -->
     
     <!-- copy the cfcs necessary -->
