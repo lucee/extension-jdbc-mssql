@@ -81,7 +81,7 @@ component extends="types.Driver" implements="types.IDatasource" {
 			see https://learn.microsoft.com/en-us/sql/connect/jdbc/using-kerberos-integrated-authentication-to-connect-to-sql-server?view=sql-server-ver16
 			Set to ""true"" (with authenticationscheme=NTLM), to indicate that NTLM credentials are used by SQL Server. If ""false"", the username and password must be supplied.",
 		"radio",2)
-		,field("Encrypt","encrypt","true,false",true,
+		,field("Encrypt","encrypt","true,false",false,
 			"When true, SQL Server uses SSL encryption for all data sent between the client and server if the server has a certificate installed.",
 			"radio",1)
 		,field("TrustServerCertificate","trustServerCertificate","true,false",true,
