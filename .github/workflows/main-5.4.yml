@@ -22,7 +22,7 @@ jobs:
 
     env:
       luceeVersion: light-5.4.0.65-RC
-      luceeVersionQuery: 5.4/stable/light
+      luceeVersionQuery: 5.4/stable/jar
 
     steps:
     - uses: actions/checkout@v4
