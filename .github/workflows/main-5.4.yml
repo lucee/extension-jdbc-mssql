@@ -57,7 +57,6 @@ jobs:
       with:
         repository: lucee/lucee
         path: lucee
-        ref: 5.4
     - name: Run Lucee Test Suite, labels="mssql"
       uses: lucee/script-runner@main
       with:
@@ -66,7 +65,7 @@ jobs:
         luceeVersion: ${{ env.luceeVersion }}
         luceeVersionQuery: ${{ env.luceeVersionQuery }}
         extensionDir: ${{ github.workspace }}/dist
-        extensions: 37C61C0A-5D7E-4256-8572639BE0CF5838 #esapi needed for 5.4 build
+        extensions:
       env:
         testLabels: mssql
         MSSQL_SERVER: localhost
