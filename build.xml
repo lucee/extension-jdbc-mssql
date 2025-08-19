@@ -8,7 +8,7 @@
   <property name="id" value="7E673D15-D87C-41A6-8B5F1956528C605F"/>
   -->
   <property name="temp" location="temp"/>
-  <property name="dist"  location="dist"/>
+  <property name="dist"  location="target"/>
 
   <scriptdef name="trim" language="javascript">
      <attribute name="text" />
@@ -177,19 +177,19 @@
     <getNameFrom path="${cfc}" property="cfcName"/>
 
 
-    <property file="./build.properties"/>
     <unwrap text="${id}" property="id"/>
     <unwrap text="${label}" property="label"/>
     <unwrap text="${description}" property="desc"/>
 
+    <echo message="==================="/>
     <echo message="${id}"/>
     <echo message="${label}"/>
     <echo message="${desc}"/>
     <echo message="${jar}"/>
     <echo message="${cfc}"/>
     <echo message="${cfcName}"/>
-    <echo message="${dir}"/>
-    <echo message="${prop}"/>
+    <echo message="${connstr}"/>
+    <echo message="${jdbcid}"/>
 
 
     <!-- Read mf entries -->
@@ -242,20 +242,13 @@ start-bundles: false
 jdbc: "[{'id':'${jdbcid}','connectionString':'${_connstr}','label':'${label}','class':'${className}','bundleName':'${symbolicName}','bundleVersion':'${symbolicVersion}'}]"
 </echo>
 
-    <!-- copy the jars necessary -->
+    <!-- copy the jars necessary
     <copy todir="${distl}/jars/">
       <fileset dir=".">
         <include name="*.jar"/>
       </fileset>
-    </copy>
-
-    <!-- copy addional jars 
-    <copy todir="${distl}/jars/">
-      <fileset dir="./addjars">
-        <include name="*.jar"/>
-      </fileset>
-    </copy>-->
-    <!-- <copy file="${jar}" tofile="${distl}/jars/${jarName}"/> -->
+    </copy> -->
+    <copy file="${jar}" tofile="${distl}/jars/${symbolicName}-${symbolicVersion}.jar"/>
     
     <!-- copy the cfcs necessary -->
     <copy file="${cfc}" tofile="${distl}/context/admin/dbdriver/${cfcName}"/>
@@ -264,7 +257,7 @@ jdbc: "[{'id':'${jdbcid}','connectionString':'${_connstr}','label':'${label}','c
     <replace haystack="${content2}" needle="{bundle-name}" repl="${symbolicName}" property="content3"/>
     <replace haystack="${content3}" needle="{id}" repl="${jdbcid}" property="content4"/>
     <replace haystack="${content4}" needle="{label}" repl="${label}" property="content5"/>
-    <replace haystack="${content5}" needle="{description}" repl="${description}" property="content6"/>
+    <replace haystack="${content5}" needle="{description}" repl="${desc}" property="content6"/>
     <replace haystack="${content6}" needle="{connection-string}" repl="${_connstr}" property="content7"/>
     <echo message="${content7}" file="${distl}/context/admin/dbdriver/${cfcName}"/>
 
@@ -279,7 +272,7 @@ jdbc: "[{'id':'${jdbcid}','connectionString':'${_connstr}','label':'${label}','c
     
 
     <!-- Zip everything  -->
-     <zip destfile="${dist}/${manifest.Bundle-SymbolicName}-${manifest.Bundle-Version}.lex">
+     <zip destfile="${dist}/${filename}-${manifest.Bundle-Version}.lex">
         <zipfileset dir="${distl}"/>
     </zip>    
   </target>
