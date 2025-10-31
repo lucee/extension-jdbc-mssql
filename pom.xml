@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.lucee</groupId>
     <artifactId>mssql-jdbc-extension</artifactId>
-    <version>12.6.3.jre11</version>
+    <version>12.6.3.jre8</version>
     <packaging>pom</packaging>
     <name>MSSQL JDBC</name>
 
