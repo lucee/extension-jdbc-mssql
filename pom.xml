@@ -165,6 +165,8 @@
                                     <property name="label" value="${label}"/>
                                     <property name="description" value="${project.description}"/>
                                     <property name="filename" value="${project.artifactId}"/>
+                                    <property name="groupId" value="${project.groupId}"/>
+                                    <property name="artifactId" value="${project.artifactId}"/>
                                     <property name="jdbcid" value="${jdbcid}"/>
                                     <property name="connstr" value="${connstr}"/>
                                 </ant>

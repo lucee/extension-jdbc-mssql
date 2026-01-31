@@ -234,6 +234,8 @@
 Built-Date: ${NOW}
 version: "${symbolicVersion}"
 id: "${id}"
+groupId: "${groupId}"
+artifactId: "${artifactId}"
 name: "${label}"
 description: "${desc}"
 category: "Datasource"
