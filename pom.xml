@@ -13,6 +13,7 @@
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <jdbc.version>12.10.0.jre11</jdbc.version>
         <id>99A4EF8D-F2FD-40C8-8FB8C2E67A4EEEB6</id>
         <image>https://raw.githubusercontent.com/lucee/extension-jdbc-mssql/master/source/images/logo.png</image>
         <buildDate>${maven.build.timestamp}</buildDate>
@@ -32,9 +33,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.lucee</groupId>
-            <artifactId>mssql</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>${jdbc.version}</version>
         </dependency>
     </dependencies>
     <scm>
@@ -157,9 +158,9 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeGroupIds>org.lucee</includeGroupIds>
-                            <includeArtifactIds>mssql</includeArtifactIds>
-                            <includeVersion>${project.version}</includeVersion> 
+                            <includeGroupIds>com.microsoft.sqlserver</includeGroupIds>
+                            <includeArtifactIds>mssql-jdbc</includeArtifactIds>
+                            <includeVersion>${jdbc.version}</includeVersion> 
                             <outputDirectory>${project.basedir}</outputDirectory>
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>true</overWriteSnapshots>
@@ -195,6 +196,7 @@
                                     <property name="filename" value="${project.artifactId}"/>
                                     <property name="groupId" value="${project.groupId}"/>
                                     <property name="artifactId" value="${project.artifactId}"/>
+                                    <property name="extensionVersion" value="${project.version}"/>
                                     <property name="jdbcid" value="${jdbcid}"/>
                                     <property name="connstr" value="${connstr}"/>
                                 </ant>
@@ -202,7 +204,7 @@
                                 <!-- Clean up the copied MSSQL JAR after ant build -->
                                 <delete>
                                     <fileset dir="${project.basedir}">
-                                        <include name="mssql-*.jar"/>
+                                        <include name="mssql-jdbc-*.jar"/>
                                     </fileset>
                                 </delete>
 
