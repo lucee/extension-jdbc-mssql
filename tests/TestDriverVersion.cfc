@@ -51,6 +51,18 @@ component extends="org.lucee.cfml.test.LuceeTestCase" labels="mssql" {
 		};
 	}
 
+	private struct function getDriverBundleInfo( required struct ds, required struct resolution ) {
+		if ( arguments.resolution.mode eq "maven" ) {
+			// Maven-loaded drivers are not reachable via createObject(); report coordinates instead.
+			return {
+				name: "maven",
+				version: listLast( arguments.resolution.maven, ":" )
+			};
+		}
+
+		return bundleInfo( createObject( "java", arguments.ds.class ) );
+	}
+
 	function run( testResults, testBox ) {
 		describe( title="MSSQL JDBC extension driver version", body=function() {
 			it(
@@ -60,7 +72,7 @@ component extends="org.lucee.cfml.test.LuceeTestCase" labels="mssql" {
 					var ds = server.getDatasource( "mssql" );
 					var resolution = getDatasourceResolution( ds );
 					var registeredDriver = getRegisteredJdbcDriver();
-					var bundle = bundleInfo( createObject( "java", ds.class ) );
+					var bundle = getDriverBundleInfo( ds, resolution );
 
 					dbinfo datasource=ds name="local.dbVersion" type="version";
 
