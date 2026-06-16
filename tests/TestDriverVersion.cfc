@@ -51,16 +51,29 @@ component extends="org.lucee.cfml.test.LuceeTestCase" labels="mssql" {
 		};
 	}
 
-	private struct function getDriverBundleInfo( required struct ds, required struct resolution ) {
+	private any function createJavaClass( required struct ds, required struct resolution ) {
 		if ( arguments.resolution.mode eq "maven" ) {
-			// Maven-loaded drivers are not reachable via createObject(); report coordinates instead.
-			return {
-				name: "maven",
-				version: listLast( arguments.resolution.maven, ":" )
-			};
+			return createObject(
+				"java",
+				arguments.ds.class,
+				{ maven: [ arguments.resolution.maven ] }
+			);
 		}
 
-		return bundleInfo( createObject( "java", arguments.ds.class ) );
+		if ( structKeyExists( arguments.ds, "bundleName" ) && len( arguments.ds.bundleName ) ) {
+			return createObject(
+				"java",
+				arguments.ds.class,
+				arguments.ds.bundleName,
+				arguments.ds.bundleVersion
+			);
+		}
+
+		return createObject( "java", arguments.ds.class );
+	}
+
+	private struct function getDriverBundleInfo( required struct ds, required struct resolution ) {
+		return bundleInfo( createJavaClass( arguments.ds, arguments.resolution ) );
 	}
 
 	function run( testResults, testBox ) {
