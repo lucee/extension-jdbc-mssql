@@ -95,9 +95,6 @@ jobs:
           repository: lucee/lucee
           path: lucee
 
-      - name: Apply Lucee LDEV5970 fix (skip generated keys on SELECT)
-        run: patch -p1 -d lucee < ci/patches/lucee-queryimpl-select-generatedkeys.patch
-
       - name: Prepare extension dir for tests
         run: rm -f target/*.lite.lex
 
