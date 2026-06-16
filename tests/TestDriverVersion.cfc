@@ -32,6 +32,7 @@ component extends="org.lucee.cfml.test.LuceeTestCase" labels="mssql" {
 			driver.maven = jdbc.maven ?: "";
 			driver.bundleName = jdbc.bundleName ?: "";
 			driver.bundleVersion = jdbc.bundleVersion ?: "";
+			driver.mode = ( len( driver.maven ) && luceeSupportsMavenJdbc() ) ? "maven" : "bundle";
 		} catch ( any e ) {
 			driver.error = e.message;
 		}
