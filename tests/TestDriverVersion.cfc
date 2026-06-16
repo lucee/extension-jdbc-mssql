@@ -1,10 +1,54 @@
 component extends="org.lucee.cfml.test.LuceeTestCase" labels="mssql" {
 
-	// keep in sync with pom.xml
+	// keep in sync with pom.xml mvnVersion (major.minor.patch prefix)
 	variables.mavenDriverVersionPrefix = "13.4.0";
 
 	function isNotSupported() {
 		return isEmpty( server.getDatasource( "mssql" ) );
+	}
+
+	private boolean function luceeSupportsMavenJdbc() {
+		try {
+			return server.doesJDBCSupportMaven();
+		} catch ( any e ) {
+			return false;
+		}
+	}
+
+	private struct function getRegisteredJdbcDriver() {
+		var driver = {
+			available: false,
+			class: "",
+			maven: "",
+			bundleName: "",
+			bundleVersion: "",
+			error: ""
+		};
+
+		try {
+			var jdbc = server.getMssqlJdbcDriverDefinition();
+			driver.available = true;
+			driver.class = jdbc.class;
+			driver.maven = jdbc.maven ?: "";
+			driver.bundleName = jdbc.bundleName ?: "";
+			driver.bundleVersion = jdbc.bundleVersion ?: "";
+		} catch ( any e ) {
+			driver.error = e.message;
+		}
+
+		return driver;
+	}
+
+	private struct function getDatasourceResolution( required struct ds ) {
+		var usesMaven = structKeyExists( arguments.ds, "maven" ) && len( arguments.ds.maven );
+
+		return {
+			mode: usesMaven ? "maven" : "bundle",
+			maven: usesMaven ? arguments.ds.maven : "",
+			bundleName: structKeyExists( arguments.ds, "bundleName" ) ? arguments.ds.bundleName : "",
+			bundleVersion: structKeyExists( arguments.ds, "bundleVersion" ) ? arguments.ds.bundleVersion : "",
+			luceeSupportsMavenJdbc: luceeSupportsMavenJdbc()
+		};
 	}
 
 	function run( testResults, testBox ) {
@@ -14,40 +58,19 @@ component extends="org.lucee.cfml.test.LuceeTestCase" labels="mssql" {
 				skip=isNotSupported(),
 				body=function( currentSpec ) {
 					var ds = server.getDatasource( "mssql" );
-					var driverClass = createObject( "java", "com.microsoft.sqlserver.jdbc.SQLServerDriver" );
-					var bundle = bundleInfo( driverClass );
-					var resolution = {
-						supportsClassDefinition: false,
-						supportsIsMaven: false,
-						isMaven: false,
-						isBundle: false,
-						error: ""
-					};
-
-					try {
-						var pc = getPageContext();
-						var cd = pc.getDataSource( "mssql" ).getClassDefinition();
-						resolution.supportsClassDefinition = true;
-						resolution.isBundle = cd.isBundle();
-						try {
-							resolution.isMaven = cd.isMaven();
-							resolution.supportsIsMaven = true;
-						} catch ( any e ) {
-							resolution.error = e.message;
-						}
-					} catch ( any e ) {
-						resolution.error = e.message;
-					}
+					var resolution = getDatasourceResolution( ds );
+					var registeredDriver = getRegisteredJdbcDriver();
+					var bundle = bundleInfo( createObject( "java", ds.class ) );
 
 					dbinfo datasource=ds name="local.dbVersion" type="version";
 
 					var info = {
+						luceeVersion: server.lucee.version,
 						datasourceClass: ds.class,
-						datasourceBundleName: structKeyExists( ds, "bundleName" ) ? ds.bundleName : "",
-						datasourceBundleVersion: structKeyExists( ds, "bundleVersion" ) ? ds.bundleVersion : "",
+						datasourceResolution: resolution,
+						registeredJdbcDriver: registeredDriver,
 						bundleInfoName: bundle.name,
 						bundleInfoVersion: bundle.version,
-						resolution: resolution,
 						driverName: dbVersion.driver_name,
 						driverVersion: dbVersion.driver_version,
 						databaseProduct: dbVersion.database_productname,
@@ -57,20 +80,13 @@ component extends="org.lucee.cfml.test.LuceeTestCase" labels="mssql" {
 
 					systemOutput( "MSSQL JDBC driver info: " & serializeJSON( info ), true );
 
-
-
-
-
-
 					expect( dbVersion.recordCount ).toBe( 1 );
 					expect( dbVersion.driver_name ).toInclude( "SQL Server" );
 
-					if ( resolution.supportsIsMaven && resolution.isMaven ) {
+					if ( resolution.mode eq "maven" ) {
 						expect( dbVersion.driver_version ).toInclude( variables.mavenDriverVersionPrefix );
-					} else if ( resolution.supportsIsMaven && resolution.isBundle ) {
-						systemOutput( "MSSQL JDBC driver loaded via OSGi bundle path; Maven version assertion skipped", true );
-					} else if ( !resolution.supportsIsMaven ) {
-						systemOutput( "isMaven() not available on this Lucee version; Maven/bundle mode assertion skipped", true );
+					} else {
+						systemOutput( "MSSQL JDBC driver loaded via OSGi bundle (#resolution.bundleName# #resolution.bundleVersion#); Maven version assertion skipped", true );
 					}
 				}
 			);
