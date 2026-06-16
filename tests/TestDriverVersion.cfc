@@ -73,7 +73,18 @@ component extends="org.lucee.cfml.test.LuceeTestCase" labels="mssql" {
 	}
 
 	private struct function getDriverBundleInfo( required struct ds, required struct resolution ) {
-		return bundleInfo( createJavaClass( arguments.ds, arguments.resolution ) );
+		var javaClass = createJavaClass( arguments.ds, arguments.resolution );
+
+		if ( arguments.resolution.mode eq "maven" ) {
+			// bundleInfo() only applies to OSGi-loaded classes; report Maven coordinates instead.
+			var gav = arguments.resolution.maven;
+			return {
+				name: listGetAt( gav, 1, ":" ) & ":" & listGetAt( gav, 2, ":" ),
+				version: listGetAt( gav, 3, ":" )
+			};
+		}
+
+		return bundleInfo( javaClass );
 	}
 
 	function run( testResults, testBox ) {
