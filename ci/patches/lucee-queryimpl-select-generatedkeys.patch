@@ -1,0 +1,45 @@
+diff --git a/core/src/main/java/lucee/runtime/type/QueryImpl.java b/core/src/main/java/lucee/runtime/type/QueryImpl.java
+index deee07145..61346792d 100755
+--- a/core/src/main/java/lucee/runtime/type/QueryImpl.java
++++ b/core/src/main/java/lucee/runtime/type/QueryImpl.java
+@@ -283,11 +283,7 @@ public final class QueryImpl implements Query, Objects, QueryResult {
+ 
+ 		TimeZone tz = ThreadLocalPageContext.getTimeZone(pc);
+ 
+-		// check if datasource support Generated Keys
+-		boolean createGeneratedKeys = createUpdateData;
+-		if (createUpdateData) {
+-			if (!dc.supportsGetGeneratedKeys()) createGeneratedKeys = false;
+-		}
++		boolean createGeneratedKeys = resolveGeneratedKeys(dc, createUpdateData, sql);
+ 
+ 		// check SQL Restrictions
+ 		if (dc.getDatasource().hasSQLRestriction()) {
+@@ -384,16 +380,22 @@ public final class QueryImpl implements Query, Objects, QueryResult {
+ 				+ columncount + ", threshold=" + luceeQueryResultThreshold + ", query=" + sql + ", tagcontext=" + ExceptionUtil.getTagContextLine(new Throwable()));
+ 	}
+ 
++	private static boolean resolveGeneratedKeys(DatasourceConnection dc, boolean createUpdateData, SQL sql) {
++		if (!createUpdateData || !dc.supportsGetGeneratedKeys()) return false;
++		return !isSelectSQL(sql);
++	}
++
++	private static boolean isSelectSQL(SQL sql) {
++		String s = StringUtil.trim(sql.getSQLString()).toLowerCase();
++		return s.startsWith("select") || s.startsWith("with") || s.startsWith("show");
++	}
++
+ 	private static void executeMSSQL(PageContext pc, DatasourceConnection dc, SQL sql, int maxrow, int fetchsize, TimeSpan timeout, boolean createUpdateData,
+ 			boolean allowToCachePreperadeStatement, QueryImpl qry, QueryResult qr, Collection.Key keyName) throws PageException {
+ 
+ 		TimeZone tz = ThreadLocalPageContext.getTimeZone(pc);
+ 
+-		// check if datasource support Generated Keys
+-		boolean createGeneratedKeys = createUpdateData;
+-		if (createUpdateData) {
+-			if (!dc.supportsGetGeneratedKeys()) createGeneratedKeys = false;
+-		}
++		boolean createGeneratedKeys = resolveGeneratedKeys(dc, createUpdateData, sql);
+ 
+ 		// check SQL Restrictions
+ 		if (dc.getDatasource().hasSQLRestriction()) {
