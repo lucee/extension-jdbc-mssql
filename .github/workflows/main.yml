@@ -93,6 +93,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: lucee/lucee
+          ref: 7.0
           path: lucee
 
       - name: Apply temporary test ignore list
@@ -100,6 +101,14 @@ jobs:
 
       - name: Prepare extension dir for tests
         run: rm -f target/*.lite.lex
+
+      - name: Log Lucee test matrix version
+        run: |
+          echo "Matrix lucee.version: ${{ matrix.lucee.version }}"
+          echo "Matrix lucee.query: ${{ matrix.lucee.query }}"
+          if [ -n "${{ matrix.lucee.query }}" ]; then
+            echo "Note: script-runner uses luceeVersionQuery when set; it overrides luceeVersion."
+          fi
 
       - name: Run Lucee Test Suite
         uses: lucee/script-runner@main
