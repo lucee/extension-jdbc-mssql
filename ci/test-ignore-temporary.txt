@@ -1,4 +1,9 @@
 # TEMPORARY — remove this file (or entries) once fixed upstream.
+#
 # LDEV-6414: MSSQL modern mode + result attribute on SELECT throws "result set is closed"
 # https://luceeserver.atlassian.net/browse/LDEV-6414
 tickets/LDEV5970.cfc
+#
+# LDEV-5972: uses reflection on lucee.runtime.type.QueryImpl.useMSSQLModern;
+# blocked on Lucee 7.1+ (SecurityException: Changing the accessibility of lucee.* members is not allowed)
+tickets/LDEV5972.cfc
