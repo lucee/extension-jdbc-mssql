@@ -93,7 +93,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: lucee/lucee
-          ref: 7.0
+          ref: "7.0"
           path: lucee
 
       - name: Apply temporary test ignore list
