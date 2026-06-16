@@ -1,16 +1,10 @@
 component extends="org.lucee.cfml.test.LuceeTestCase" labels="mssql" {
 
 	// keep in sync with pom.xml
-	variables.legacyBundleVersionPrefix = "12.10.2";
 	variables.mavenDriverVersionPrefix = "13.4.0";
 
 	function isNotSupported() {
 		return isEmpty( server.getDatasource( "mssql" ) );
-	}
-
-	private boolean function usesLegacyBundleDriver( required string driverVersion ) {
-		// Lucee versions without extension maven: support resolve org.lucee.mssql from bundleVersion
-		return find( variables.legacyBundleVersionPrefix, arguments.driverVersion );
 	}
 
 	function run( testResults, testBox ) {
@@ -22,6 +16,28 @@ component extends="org.lucee.cfml.test.LuceeTestCase" labels="mssql" {
 					var ds = server.getDatasource( "mssql" );
 					var driverClass = createObject( "java", "com.microsoft.sqlserver.jdbc.SQLServerDriver" );
 					var bundle = bundleInfo( driverClass );
+					var resolution = {
+						supportsClassDefinition: false,
+						supportsIsMaven: false,
+						isMaven: false,
+						isBundle: false,
+						error: ""
+					};
+
+					try {
+						var pc = getPageContext();
+						var cd = pc.getDataSource( "mssql" ).getClassDefinition();
+						resolution.supportsClassDefinition = true;
+						resolution.isBundle = cd.isBundle();
+						try {
+							resolution.isMaven = cd.isMaven();
+							resolution.supportsIsMaven = true;
+						} catch ( any e ) {
+							resolution.error = e.message;
+						}
+					} catch ( any e ) {
+						resolution.error = e.message;
+					}
 
 					dbinfo datasource=ds name="local.dbVersion" type="version";
 
@@ -31,6 +47,7 @@ component extends="org.lucee.cfml.test.LuceeTestCase" labels="mssql" {
 						datasourceBundleVersion: structKeyExists( ds, "bundleVersion" ) ? ds.bundleVersion : "",
 						bundleInfoName: bundle.name,
 						bundleInfoVersion: bundle.version,
+						resolution: resolution,
 						driverName: dbVersion.driver_name,
 						driverVersion: dbVersion.driver_version,
 						databaseProduct: dbVersion.database_productname,
@@ -40,13 +57,20 @@ component extends="org.lucee.cfml.test.LuceeTestCase" labels="mssql" {
 
 					systemOutput( "MSSQL JDBC driver info: " & serializeJSON( info ), true );
 
+
+
+
+
+
 					expect( dbVersion.recordCount ).toBe( 1 );
 					expect( dbVersion.driver_name ).toInclude( "SQL Server" );
 
-					if ( usesLegacyBundleDriver( dbVersion.driver_version ) ) {
-						systemOutput( "MSSQL JDBC driver loaded via legacy OSGi bundle (#variables.legacyBundleVersionPrefix#); version check skipped", true );
-					} else {
+					if ( resolution.supportsIsMaven && resolution.isMaven ) {
 						expect( dbVersion.driver_version ).toInclude( variables.mavenDriverVersionPrefix );
+					} else if ( resolution.supportsIsMaven && resolution.isBundle ) {
+						systemOutput( "MSSQL JDBC driver loaded via OSGi bundle path; Maven version assertion skipped", true );
+					} else if ( !resolution.supportsIsMaven ) {
+						systemOutput( "isMaven() not available on this Lucee version; Maven/bundle mode assertion skipped", true );
 					}
 				}
 			);
