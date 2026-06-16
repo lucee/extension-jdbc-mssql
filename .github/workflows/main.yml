@@ -95,6 +95,9 @@ jobs:
           repository: lucee/lucee
           path: lucee
 
+      - name: Apply temporary test ignore list
+        run: bash ci/apply-test-ignore-temporary.sh
+
       - name: Prepare extension dir for tests
         run: rm -f target/*.lite.lex
 

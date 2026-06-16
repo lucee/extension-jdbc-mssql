@@ -1,0 +1,4 @@
+# TEMPORARY — remove this file (or entries) once fixed upstream.
+# LDEV-6414: MSSQL modern mode + result attribute on SELECT throws "result set is closed"
+# https://luceeserver.atlassian.net/browse/LDEV-6414
+tickets/LDEV5970.cfc
