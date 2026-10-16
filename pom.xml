@@ -23,10 +23,10 @@
         <releaseType>server</releaseType>
         <!-- mssql-jdbc version; the extension version is 13.4.0.N -->
         <driverVersion>13.4.0.jre11</driverVersion>
-        <!-- OSGi Bundle-Version from the mssql-jdbc jar manifest -->
+        <!-- OSGi Bundle-SymbolicName / Bundle-Version from the mssql-jdbc jar manifest -->
         <bundleVersion>${driverVersion}</bundleVersion>
         <driverClass>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverClass>
-        <bundleName>org.lucee.mssql</bundleName>
+        <bundleName>com.microsoft.sqlserver.mssql-jdbc</bundleName>
         <mvnGroupId>com.microsoft.sqlserver</mvnGroupId>
         <mvnArtifactId>mssql-jdbc</mvnArtifactId>
         <mvnVersion>${driverVersion}</mvnVersion>
