@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.lucee</groupId>
     <artifactId>mssql-jdbc-extension</artifactId>
-    <version>13.4.0.1-SNAPSHOT</version>
+    <version>13.4.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>MSSQL JDBC</name>
 
@@ -23,10 +23,12 @@
         <releaseType>server</releaseType>
         <!-- mssql-jdbc version; the extension version is 13.4.0.N -->
         <driverVersion>13.4.0.jre11</driverVersion>
-        <!-- OSGi Bundle-SymbolicName / Bundle-Version from the mssql-jdbc jar manifest -->
-        <bundleVersion>${driverVersion}</bundleVersion>
+        <!-- Lucee 6.0 - 7.0 load the driver through the OSGi bundle below (they ignore "maven"),
+             Lucee 7.1+ prefer the "maven" coordinates. The legacy bundle is shipped in the .lex (jars/),
+             so existing datasources saved with org.lucee.mssql keep working on older versions. -->
+        <bundleVersion>12.10.2</bundleVersion>
         <driverClass>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverClass>
-        <bundleName>com.microsoft.sqlserver.mssql-jdbc</bundleName>
+        <bundleName>org.lucee.mssql</bundleName>
         <mvnGroupId>com.microsoft.sqlserver</mvnGroupId>
         <mvnArtifactId>mssql-jdbc</mvnArtifactId>
         <mvnVersion>${driverVersion}</mvnVersion>

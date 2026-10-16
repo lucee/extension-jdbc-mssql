@@ -75,6 +75,14 @@
             <arg value="dependency:copy-dependencies"/>
         </exec>
 
+        <!-- legacy OSGi bundle used by Lucee 6.0 - 7.0 (installed from the .lex jars/ folder) -->
+        <exec dir="${basedir}" executable="mvn" failonerror="true">
+            <arg value="-Dartifact=org.lucee:mssql:${bundleVersion}"/>
+            <arg value="-DoutputDirectory=${dist}/extension/jars"/>
+            <arg value="-Dmdep.stripVersion=false"/>
+            <arg value="dependency:copy"/>
+        </exec>
+
         <exec executable="bash" failonerror="true">
             <arg value="${basedir}/copy-parent-poms.sh"/>
             <arg value="${temp}/dependency"/>
