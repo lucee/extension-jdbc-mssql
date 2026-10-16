@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.lucee</groupId>
     <artifactId>mssql-jdbc-extension</artifactId>
-    <version>13.4.0.jre11</version>
+    <version>13.4.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>MSSQL JDBC</name>
 
@@ -21,12 +21,15 @@
         <jdbcid>mssql</jdbcid>
         <label>Microsoft SQL Server (Vendor Microsoft)</label>
         <releaseType>server</releaseType>
+        <!-- mssql-jdbc version; the extension version is 13.4.0.N -->
+        <driverVersion>13.4.0.jre11</driverVersion>
+        <!-- OSGi Bundle-Version from the mssql-jdbc jar manifest -->
+        <bundleVersion>${driverVersion}</bundleVersion>
         <driverClass>com.microsoft.sqlserver.jdbc.SQLServerDriver</driverClass>
         <bundleName>org.lucee.mssql</bundleName>
-        <bundleVersion>12.10.2</bundleVersion>
         <mvnGroupId>com.microsoft.sqlserver</mvnGroupId>
         <mvnArtifactId>mssql-jdbc</mvnArtifactId>
-        <mvnVersion>13.4.0.jre11</mvnVersion>
+        <mvnVersion>${driverVersion}</mvnVersion>
         <release.url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</release.url>
         <snapshot.url>https://oss.sonatype.org/content/repositories/snapshots/</snapshot.url>
     </properties>
