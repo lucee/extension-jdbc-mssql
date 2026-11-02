@@ -205,4 +205,11 @@ component extends="types.Driver" implements="types.IDatasource" {
 	public boolean function equals(required className,required dsn) {
 		return this.className EQ arguments.className and findNoCase("sqlserver",arguments.dsn);
 	}
+
+	/**
+	 * the timeout set on the datasource is always applied (LDEV-2591)
+	 */
+	public boolean function alwaysSetTimeout() {
+		return true;
+	}
 }
