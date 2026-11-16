@@ -17,7 +17,7 @@
         <image>https://raw.githubusercontent.com/lucee/extension-jdbc-mssql/master/source/images/logo.png</image>
         <buildDate>${maven.build.timestamp}</buildDate>
         <luceeCoreVersion>5.3.2.63-SNAPSHOT</luceeCoreVersion>
-        <connstr>jdbc:sqlserver://{host}:{port}</connstr>
+        <connstr>jdbc:sqlserver://{host}:{port};databaseName={database}</connstr>
         <jdbcid>mssql</jdbcid>
         <label>Microsoft SQL Server (Vendor Microsoft)</label>
         <releaseType>server</releaseType>
